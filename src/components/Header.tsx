@@ -65,7 +65,7 @@ export function Header({ darkMode, toggleDarkMode, onSearch }: HeaderProps) {
             </motion.div>
             <div className="flex flex-col">
               <span className="font-['Orbitron'] text-lg bg-gradient-to-r from-cyan-400 via-blue-500 to-cyan-400 bg-clip-text text-transparent bg-[length:200%_auto] animate-[holographic-shift_3s_ease_infinite]">
-                Virtual Factory AI
+                Tiru AI
               </span>
               <motion.span 
                 className="text-[10px] text-cyan-400/60 font-mono tracking-wider"
