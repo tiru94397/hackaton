@@ -109,7 +109,18 @@ export function ChatInterface({ backendUrl }: Props) {
                   <span className="text-xs text-purple-400 font-['Orbitron']">Tiru AI</span>
                 </div>
               )}
-              <p className="text-sm md:text-base leading-relaxed">{message.content}</p>
+              <div
+  className="text-sm md:text-base leading-relaxed whitespace-pre-wrap break-words"
+  dangerouslySetInnerHTML={{
+    __html: message.content
+      .replace(/\[\d+\]/g, "") // remove [1] [2]
+      .replace(/\n/g, "<br />") // keep line breaks
+      .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>") // bold
+      .replace(/\*(.*?)\*/g, "<i>$1</i>"), // italics
+  }}
+/>
+
+
               <span className="text-xs text-muted-foreground mt-2 block">
                 {message.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
               </span>

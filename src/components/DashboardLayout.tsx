@@ -1,9 +1,21 @@
+"use client";
 import { ReactNode } from "react";
 import { motion } from "motion/react";
 import { Sidebar } from "./Sidebar";
 import { DashboardHeader } from "./DashboardHeader";
 import { StatusBar } from "./StatusBar";
 import { CyberpunkBackground } from "./CyberpunkBackground";
+import TestimonialsSection from "./TestimonialsSection";
+
+export default function Dashboard() {
+  return (
+    <main className="flex flex-col min-h-screen">
+      {/* Other sections */}
+      <TestimonialsSection />
+    </main>
+  );
+}
+
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -11,7 +23,7 @@ interface DashboardLayoutProps {
   onViewChange: (view: string) => void;
   onSearch?: (query: string) => void;
   onLogout?: () => void;
-  ollamaConnected: boolean;
+  perplexityConnected: boolean;
   modelName: string;
 }
 
@@ -21,38 +33,35 @@ export function DashboardLayout({
   onViewChange,
   onSearch,
   onLogout,
-  ollamaConnected,
+  perplexityConnected,
   modelName,
 }: DashboardLayoutProps) {
   return (
     <div className="min-h-screen bg-background text-foreground relative overflow-hidden">
-      {/* Cyberpunk Animated Background */}
       <CyberpunkBackground />
 
       {/* Sidebar */}
       <Sidebar activeView={activeView} onViewChange={onViewChange} />
 
-      {/* Main Dashboard Area */}
+      {/* Main Area */}
       <div className="pl-0 md:pl-20 relative z-10">
-        {/* Header */}
         <DashboardHeader onSearch={onSearch} onLogout={onLogout} />
 
-        {/* Main Content */}
         <motion.main
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.6 }}
           className="pt-16 pb-12 md:pb-16 min-h-screen"
         >
-          {/* Content padding */}
-          <div className="p-3 md:p-6 h-[calc(100vh-7rem)] md:h-[calc(100vh-7rem)]">{children}</div>
+          <div className="p-3 md:p-6 h-[calc(100vh-7rem)] overflow-y-auto">
+            {children}
+          </div>
         </motion.main>
 
-        {/* Status Bar */}
-        <StatusBar ollamaConnected={ollamaConnected} modelName={modelName} />
+        <StatusBar perplexityConnected={perplexityConnected} modelName={modelName} />
       </div>
 
-      {/* Floating particles for immersion */}
+      {/* Floating Particles */}
       {[...Array(15)].map((_, i) => (
         <motion.div
           key={i}

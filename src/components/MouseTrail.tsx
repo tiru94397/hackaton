@@ -1,24 +1,29 @@
+"use client";
+
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface Particle {
   id: number;
   x: number;
   y: number;
+  color: string;
 }
 
 export function MouseTrail() {
   const [particles, setParticles] = useState<Particle[]>([]);
   const [isEnabled, setIsEnabled] = useState(false);
 
+  // Predefined gradient colors (cyberpunk palette)
+  const colors = [
+    "rgba(34,211,238,0.9)", // cyan-400
+    "rgba(59,130,246,0.9)", // blue-500
+    "rgba(147,51,234,0.9)", // purple-600
+  ];
+
   useEffect(() => {
-    // Only enable on larger screens
-    setIsEnabled(window.innerWidth > 768);
-
-    const handleResize = () => {
-      setIsEnabled(window.innerWidth > 768);
-    };
-
+    const handleResize = () => setIsEnabled(window.innerWidth > 768);
+    handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -28,26 +33,27 @@ export function MouseTrail() {
 
     let particleId = 0;
     let lastTime = Date.now();
-    const throttleDelay = 50; // Only create particle every 50ms
+    const throttleDelay = 35;
 
     const handleMouseMove = (e: MouseEvent) => {
       const now = Date.now();
       if (now - lastTime < throttleDelay) return;
       lastTime = now;
 
+      const color = colors[Math.floor(Math.random() * colors.length)];
+
       const newParticle: Particle = {
         id: particleId++,
         x: e.clientX,
         y: e.clientY,
+        color,
       };
 
       setParticles((prev) => {
-        // Keep only last 10 particles
         const updated = [...prev, newParticle];
-        return updated.slice(-10);
+        return updated.slice(-14); // keep last few
       });
 
-      // Remove particle after animation
       setTimeout(() => {
         setParticles((prev) => prev.filter((p) => p.id !== newParticle.id));
       }, 1000);
@@ -60,33 +66,26 @@ export function MouseTrail() {
   if (!isEnabled) return null;
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-40">
+    <div className="fixed inset-0 pointer-events-none z-[9999]">
       <AnimatePresence>
-        {particles.map((particle) => (
+        {particles.map((p) => (
           <motion.div
-            key={particle.id}
-            className="absolute w-2 h-2 rounded-full"
+            key={p.id}
+            className="absolute w-2 h-2 rounded-full mix-blend-screen"
             style={{
-              left: particle.x,
-              top: particle.y,
-              background: "radial-gradient(circle, rgba(6, 182, 212, 0.8), transparent)",
+              left: p.x,
+              top: p.y,
+              background: `radial-gradient(circle, ${p.color}, transparent 70%)`,
+              boxShadow: `0 0 10px ${p.color}`,
             }}
-            initial={{
-              scale: 1,
-              opacity: 0.8,
-            }}
+            initial={{ scale: 1.4, opacity: 0.9 }}
             animate={{
-              scale: 0,
-              opacity: 0,
+              scale: [1.4, 0.8, 0],
+              opacity: [0.9, 0.5, 0],
+              y: [-2, -8, 0],
             }}
-            exit={{
-              scale: 0,
-              opacity: 0,
-            }}
-            transition={{
-              duration: 1,
-              ease: "easeOut",
-            }}
+            exit={{ opacity: 0, scale: 0 }}
+            transition={{ duration: 1.1, ease: "easeOut" }}
           />
         ))}
       </AnimatePresence>

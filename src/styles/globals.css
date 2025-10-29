@@ -536,3 +536,15 @@ h1, h2, h3 {
   background: radial-gradient(circle at center, transparent 0%, rgba(11, 15, 25, 0.8) 100%);
   pointer-events: none;
 }
+.prose strong {
+  color: #fff;
+  font-weight: 600;
+}
+
+.prose p {
+  margin-bottom: 0.6rem;
+}
+
+.prose em {
+  color: #a5b4fc;
+}
