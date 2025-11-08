@@ -17,8 +17,11 @@ export const app = initializeApp(firebaseConfig);
 
 // ✅ Export `auth` so other files can import it
 export const auth = getAuth(app);
+<<<<<<< HEAD
 
 console.log("🔥 Firebase ENV check:", {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
 });
+=======
+>>>>>>> 7bdea7f6db8ff72f284db25ee0299c7bc570a019

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { DashboardLayout }  from "./components/DashboardLayout";
+import { DashboardLayout } from "./components/DashboardLayout";
 import ChatInterface from "./components/ChatInterface";
 import { CyberpunkBackground } from "./components/CyberpunkBackground";
 import { Toaster } from "./components/ui/sonner";
@@ -20,7 +20,6 @@ import { Scene3D } from "./components/Scene3D";
 import { Canvas } from "@react-three/fiber";
 import { MouseTrail } from "./components/MouseTrail";
 import { AIEnvironmentProvider } from "./context/AIEnvironmentContext";
-import { Footer } from "./components/Footer";
 
 /* -------------------------------------------------------------
    ⚙️ SETTINGS SECTION
@@ -298,5 +297,3 @@ export default function App() {
     </AIEnvironmentProvider>
   );
 }
-
-<Footer />
