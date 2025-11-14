@@ -8,7 +8,7 @@ import { useAIEnvironment } from "../context/AIEnvironmentContext";
 async function generateFreeImage(prompt: string) {
   try {
     const encoded = encodeURIComponent(prompt);
-    const imageUrl = `https://image.pollinations.ai/prompt/${encoded}`;
+    const imageUrl = `https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2`;
     console.log("🖼 Generating:", imageUrl);
 
     const res = await fetch(imageUrl);
