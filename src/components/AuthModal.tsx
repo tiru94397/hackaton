@@ -22,10 +22,10 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
     }
 
     // ✅ Local Auth simulation (lightweight)
-    localStorage.setItem("virtualFactoryAuth", "true");
-    localStorage.setItem("virtualFactoryUser", email);
+    localStorage.setItem("GeethaFactoryAuth", "true");
+    localStorage.setItem("GeethaFactoryUser", email);
     toast.success(isSignUp ? "Account created!" : "Welcome back!", {
-      description: isSignUp ? "You can now explore Virtual Factory" : "Authentication successful",
+      description: isSignUp ? "You can now explore Geetha Factory" : "Authentication successful",
       icon: <Sparkles className="w-4 h-4 text-cyan-400" />,
     });
 
