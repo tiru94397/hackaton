@@ -4,25 +4,28 @@ import { Send, Maximize2 } from "lucide-react";
 import { Button } from "./ui/button";
 import { useAIEnvironment } from "../context/AIEnvironmentContext";
 
-// ✅ Pollinations free image API (CORS-safe blob fetch)
+// ---------------------------
+// IMAGE GENERATOR (Pollinations API)
+// ---------------------------
 async function generateFreeImage(prompt: string) {
   try {
     const encoded = encodeURIComponent(prompt);
-    const imageUrl = `https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2`;
-    console.log("🖼 Generating:", imageUrl);
+    const url = `https://image.pollinations.ai/prompt/${encoded}`;
 
-    const res = await fetch(imageUrl);
-    if (!res.ok) throw new Error("Pollinations fetch failed");
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) throw new Error("Pollinations responded with error");
 
     const blob = await res.blob();
-    const localUrl = URL.createObjectURL(blob); // converts to safe blob URL
-    return { url: localUrl };
+    return { url: URL.createObjectURL(blob) };
   } catch (err) {
     console.error("❌ Image generation failed:", err);
     return null;
   }
 }
 
+// ---------------------------
+// TYPES
+// ---------------------------
 interface Message {
   id: string;
   role: "user" | "assistant";
@@ -35,23 +38,29 @@ interface Props {
   backendUrl: string;
 }
 
+// ---------------------------
+// MAIN COMPONENT
+// ---------------------------
 export default function ChatInterface({ backendUrl }: Props) {
   const { setMode } = useAIEnvironment();
+
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
       role: "assistant",
       content:
-        "👋 Hey Operator! I’m your **Virtual Factory AI Assistant**. Describe anything — I’ll respond and even generate visuals for you.",
+        "👋 Hey Operator! I’m your <b>Geetha Factory AI Assistant</b>. Describe anything — I’ll respond and even generate visuals for you.",
       timestamp: new Date(),
     },
   ]);
+
   const [input, setInput] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll to latest message
+  // Auto-scroll
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -60,75 +69,96 @@ export default function ChatInterface({ backendUrl }: Props) {
   useEffect(() => {
     return () => {
       messages.forEach((msg) => {
-        if (msg.imageUrl?.startsWith("blob:")) URL.revokeObjectURL(msg.imageUrl);
+        if (msg.imageUrl?.startsWith("blob:")) {
+          URL.revokeObjectURL(msg.imageUrl);
+        }
       });
     };
   }, [messages]);
 
+  // ---------------------------
+  // SUBMIT HANDLER
+  // ---------------------------
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isGenerating) return;
 
+    const query = input.trim();
+
     const userMsg: Message = {
-      id: Date.now().toString(),
+      id: `${Date.now()}`,
       role: "user",
-      content: input.trim(),
+      content: query,
       timestamp: new Date(),
     };
+
     setMessages((prev) => [...prev, userMsg]);
     setIsGenerating(true);
 
     try {
-      // 🧠 Ask Perplexity backend
+      // Backend request
       const res = await fetch(`${backendUrl}/api/perplexity/ask`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt: input }),
+        body: JSON.stringify({ prompt: query }),
       });
-      const text = await res.text();
+
+      let text: string;
+      try {
+        text = await res.text();
+      } catch {
+        text = "🤖 Unexpected response format.";
+      }
 
       const aiMsg: Message = {
-        id: (Date.now() + 1).toString(),
+        id: `${Date.now() + 1}`,
         role: "assistant",
         content: text || "🤖 Sorry, I couldn’t process that request.",
         timestamp: new Date(),
       };
 
-      // 🖼 Check if visual prompt
+      // IMAGE DETECTION
       const isVisual = /(image|show|draw|visualize|generate|picture|design|look like)/i.test(
-        input
+        query
       );
+
       if (isVisual) {
-        const img = await generateFreeImage(input);
+        const img = await generateFreeImage(query);
         if (img?.url) aiMsg.imageUrl = img.url;
       }
 
       setMessages((prev) => [...prev, aiMsg]);
     } catch (err) {
       console.error("Chat Error:", err);
-      const errorMsg: Message = {
-        id: (Date.now() + 2).toString(),
-        role: "assistant",
-        content: "❌ Error: Could not connect to AI servers.",
-        timestamp: new Date(),
-      };
-      setMessages((prev) => [...prev, errorMsg]);
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `${Date.now() + 2}`,
+          role: "assistant",
+          content: "❌ Error: Could not connect to AI servers.",
+          timestamp: new Date(),
+        },
+      ]);
     } finally {
       setInput("");
       setIsGenerating(false);
     }
   };
 
+  // ---------------------------
+  // UI
+  // ---------------------------
   return (
     <div className="flex flex-col h-full bg-gradient-to-br from-gray-950 via-gray-900 to-black rounded-2xl border border-cyan-400/20 overflow-hidden">
-      {/* 💬 CHAT SECTION */}
+      {/* CHAT WINDOW */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.map((m) => (
           <motion.div
             key={m.id}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.25 }}
             className={`flex ${
               m.role === "user" ? "justify-end" : "justify-start"
             }`}
@@ -140,35 +170,35 @@ export default function ChatInterface({ backendUrl }: Props) {
                   : "bg-purple-700/20 border border-purple-500/30 text-purple-200"
               }`}
             >
-              {/* 🖼 IMAGE INSIDE MESSAGE */}
+              {/* IMAGE */}
               {m.imageUrl && (
                 <motion.div
                   className="relative mb-3 cursor-pointer group"
                   whileHover={{ scale: 1.03 }}
                   onClick={() => setFullscreenImage(m.imageUrl!)}
                 >
-                  <img
-                    src={m.imageUrl}
-                    alt="AI Visual"
-                    className="rounded-xl w-full max-h-[220px] object-cover border border-cyan-400/30 shadow-[0_0_20px_rgba(6,182,212,0.3)]"
-                    onError={(e) =>
-                      (e.currentTarget.src =
-                        "https://dummyimage.com/600x400/000/fff&text=Image+Not+Available")
-                    }
-                  />
-                  <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 flex items-center justify-center transition">
-                    <Maximize2 className="w-5 h-5 text-white" />
-                  </div>
+                <img
+                  src={m.imageUrl}
+                  alt="AI Visual"
+                  className="rounded-xl w-full max-h-[220px] object-cover border border-cyan-400/30 shadow-[0_0_20px_rgba(6,182,212,0.3)]"
+                  onError={(e) => {
+                    e.currentTarget.src =
+                      "https://dummyimage.com/600x400/000/fff&text=Image+Not+Available";
+                  }}
+                />
+                <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 flex items-center justify-center transition">
+                  <Maximize2 className="w-5 h-5 text-white" />
+                </div>
                 </motion.div>
               )}
 
-              {/* TEXT CONTENT */}
+              {/* TEXT */}
               <div
                 dangerouslySetInnerHTML={{
                   __html: m.content
                     .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>")
                     .replace(/\*(.*?)\*/g, "<i>$1</i>")
-                    .replace(/\n/g, "<br />"),
+                    .replace(/\n/g, "<br/>"),
                 }}
               />
 
@@ -187,10 +217,11 @@ export default function ChatInterface({ backendUrl }: Props) {
             🤖 Generating response...
           </p>
         )}
+
         <div ref={messagesEndRef} />
       </div>
 
-      {/* ✍️ INPUT BAR */}
+      {/* INPUT BAR */}
       <form
         onSubmit={handleSubmit}
         className="p-3 border-t border-cyan-400/30 flex items-center gap-2 bg-gray-900/40 backdrop-blur-md"
@@ -203,6 +234,7 @@ export default function ChatInterface({ backendUrl }: Props) {
           className="flex-1 bg-black/40 border border-cyan-400/20 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-cyan-400/60 text-gray-200"
           disabled={isGenerating}
         />
+
         <Button
           type="submit"
           disabled={!input.trim() || isGenerating}
@@ -212,7 +244,7 @@ export default function ChatInterface({ backendUrl }: Props) {
         </Button>
       </form>
 
-      {/* 🖼 FULLSCREEN IMAGE VIEWER */}
+      {/* FULLSCREEN IMAGE VIEWER */}
       <AnimatePresence>
         {fullscreenImage && (
           <motion.div
