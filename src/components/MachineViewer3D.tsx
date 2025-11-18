@@ -48,7 +48,7 @@ function useSceneExport() {
   return useCallback(
     (format: string) => {
       try {
-        const fileName = `VirtualFactory_${Date.now()}.${format}`;
+        const fileName = `GeethaFactory_${Date.now()}.${format}`;
         let blob: Blob | null = null;
 
         switch (format) {
