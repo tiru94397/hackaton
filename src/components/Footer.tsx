@@ -64,7 +64,7 @@ export function Footer() {
                 <div className="w-4 h-4 border-2 border-white rounded-sm" />
               </div>
               <span className="font-mono bg-gradient-to-r from-cyan-400 to-blue-600 bg-clip-text text-transparent">
-                Virtual Factory AI
+                Geetha Factory AI
               </span>
             </div>
             <p className="text-foreground/60 mb-4 max-w-sm italic">
@@ -140,7 +140,7 @@ export function Footer() {
         {/* Bottom Section */}
         <div className="pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-sm text-foreground/60">
-            © {currentYear} Virtual Factory AI. All rights reserved.
+            © {currentYear} Geetha Factory AI. All rights reserved.
           </p>
 
           {/* Social Links */}
