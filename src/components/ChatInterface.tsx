@@ -49,7 +49,7 @@ export default function ChatInterface({ backendUrl }: Props) {
       id: "1",
       role: "assistant",
       content:
-        "👋 Hey Operator! I’m your <b>Geetha Factory AI Assistant</b>. Describe anything — I’ll respond and even generate visuals for you.",
+        "👋 Hey Operator! I’m your <b>Virtual Factory AI Assistant</b>. Describe anything — I’ll respond and even generate visuals for you.",
       timestamp: new Date(),
     },
   ]);
