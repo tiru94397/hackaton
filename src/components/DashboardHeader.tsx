@@ -65,14 +65,14 @@ export function DashboardHeader({ onSearch, onLogout }: DashboardHeaderProps) {
         <div className="hidden md:flex items-center gap-4">
           <div>
             <h1 className="text-xl font-['Orbitron'] bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
-              Geetha Factory AI
+              Virtual Factory AI
             </h1>
             <motion.p
               className="text-xs text-cyan-400/60 font-mono"
               animate={{ opacity: [0.4, 1, 0.4] }}
               transition={{ duration: 2, repeat: Infinity }}
             >
-              J.A.R.V.I.S Interface v2.0
+              L.L.M Interface v2.0
             </motion.p>
           </div>
         </div>
@@ -80,7 +80,7 @@ export function DashboardHeader({ onSearch, onLogout }: DashboardHeaderProps) {
         {/* Mobile: Compact Title */}
         <div className="flex md:hidden items-center ml-14">
           <h1 className="font-['Orbitron'] bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
-            Geetha AI
+            Virtual AI
           </h1>
         </div>
 
