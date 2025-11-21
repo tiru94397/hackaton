@@ -54,7 +54,7 @@ function BootScreen() {
         transition={{ repeat: Infinity, duration: 1.2 }}
         className="text-lg"
       >
-        Booting Geetha Factory Core...
+        Booting Virtual Factory Core...
       </motion.div>
 
       <motion.div className="overflow-hidden h-20 w-[320px] bg-gray-900/60 border border-cyan-500/20 rounded-md p-2 text-left text-xs leading-4">
@@ -273,7 +273,7 @@ function HomeView({
   const items = [
     {
       title: "Open AI Chat",
-      desc: "Talk with your Geetha Factory Assistant",
+      desc: "Talk with your Virtual Factory Assistant",
       icon: <Sparkles className="w-6 h-6 text-cyan-400" />,
       onClick: () => onNavigate("chat"),
       color: "from-cyan-500/30 via-cyan-400/10",
@@ -323,7 +323,7 @@ function HomeView({
     >
       <div className="max-w-6xl w-full">
         <h2 className="text-4xl font-bold mb-6 bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-          ⚡ Geetha Factory Dashboard
+          ⚡ Virtual Factory Dashboard
         </h2>
 
         <p className="text-gray-400 mb-10 text-lg">
