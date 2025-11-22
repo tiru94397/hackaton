@@ -12,7 +12,7 @@ import { MachineGallery } from "./components/MachineGallery";
 import { MachineCanvas } from "./components/MachineCanvas";
 import { AuthModal } from "./components/AuthModal";
 import { CyberpunkBackground } from "./components/CyberpunkBackground";
-import SettingsSection  from "./components/SettingSection";
+import SettingSection  from "./components/SettingSection";
 import ChatInterface from "./components/ChatInterface";
 
 import  AIEnvironmentProvider  from "./context/AIEnvironmentContext";
@@ -113,7 +113,7 @@ export default function App() {
           </div>
         );
       case "settings":
-        return <SettingsSection />;
+        return <SettingSection />;
       default:
         return <DualPanelView isGenerating={isGenerating} onGenerate={generateMachine} machineData={machineData} />;
     }
