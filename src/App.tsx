@@ -1,3 +1,4 @@
+// App.tsx (paste into src/App.tsx)
 "use client";
 
 import React, { useEffect, useState, useCallback } from "react";
@@ -11,10 +12,10 @@ import { MachineGallery } from "./components/MachineGallery";
 import { MachineCanvas } from "./components/MachineCanvas";
 import { AuthModal } from "./components/AuthModal";
 import { CyberpunkBackground } from "./components/CyberpunkBackground";
-import SettingSection from "./components/SettingSection";
+import SettingsSection  from "./components/SettingSection";
 import ChatInterface from "./components/ChatInterface";
 
-import { AIEnvironmentProvider } from "./context/AIEnvironmentContext";
+import  AIEnvironmentProvider  from "./context/AIEnvironmentContext";
 
 type Views = "home" | "chat" | "models" | "3d-view" | "settings";
 
@@ -157,3 +158,4 @@ export default function App() {
     </AIEnvironmentProvider>
   );
 }
+
