@@ -1,4 +1,3 @@
-// App.tsx (paste into src/App.tsx)
 "use client";
 
 import React, { useEffect, useState, useCallback } from "react";
