@@ -15,7 +15,7 @@ import { CyberpunkBackground } from "./components/CyberpunkBackground";
 import SettingSection  from "./components/SettingSection";
 import ChatInterface from "./components/ChatInterface";
 
-import  AIEnvironmentProvider  from "./context/AIEnvironmentContext";
+import { AIEnvironmentProvider }  from "./context/AIEnvironmentContext";
 
 type Views = "home" | "chat" | "models" | "3d-view" | "settings";
 
