@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { ChatInterface } from "./ChatInterface";
+import  ChatInterface  from "./ChatInterface";
 import { MachineViewer3D } from "./MachineViewer3D";
 import { MachineSpecsPanel } from "./MachineSpecsPanel";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
