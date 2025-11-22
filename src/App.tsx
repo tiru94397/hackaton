@@ -1,4 +1,4 @@
-// App.tsx (paste into src/App.tsx)
+// App.tsx (NO LOGIN / NO SIGNUP)
 "use client";
 
 import React, { useEffect, useState, useCallback } from "react";
@@ -10,12 +10,11 @@ import { DashboardLayout } from "./components/DashboardLayout";
 import { DualPanelView } from "./components/DualPanelView";
 import { MachineGallery } from "./components/MachineGallery";
 import { MachineCanvas } from "./components/MachineCanvas";
-import { AuthModal } from "./components/AuthModal";
 import { CyberpunkBackground } from "./components/CyberpunkBackground";
-import SettingSection  from "./components/SettingSection";
+import SettingSection from "./components/SettingSection";
 import ChatInterface from "./components/ChatInterface";
 
-import { AIEnvironmentProvider }  from "./context/AIEnvironmentContext";
+import { AIEnvironmentProvider } from "./context/AIEnvironmentContext";
 
 type Views = "home" | "chat" | "models" | "3d-view" | "settings";
 
@@ -43,36 +42,21 @@ function BootScreen() {
 export default function App() {
   const [activeView, setActiveView] = useState<Views>("chat");
   const [isBooting, setIsBooting] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [showAuthModal, setShowAuthModal] = useState(false);
 
   const [machineData, setMachineData] = useState<MachineData | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
 
+  // Boot animation
   useEffect(() => {
     document.documentElement.classList.add("dark");
     const t = setTimeout(() => setIsBooting(false), 1200);
     return () => clearTimeout(t);
   }, []);
 
-  useEffect(() => {
-    const val = localStorage.getItem("virtualFactoryAuth");
-    if (val === "true") setIsAuthenticated(true);
-    else setShowAuthModal(true);
-  }, []);
-
-  const handleLogin = useCallback((email: string) => {
-    localStorage.setItem("virtualFactoryAuth", "true");
-    localStorage.setItem("virtualFactoryUser", email);
-    setIsAuthenticated(true);
-    setShowAuthModal(false);
-    toast.success("Welcome back!");
-  }, []);
-
+  // Fake machine generator (your existing logic)
   const generateMachine = useCallback((query: string) => {
     setIsGenerating(true);
-    const lower = query.toLowerCase();
-    const isDrone = lower.includes("drone");
+    const isDrone = query.toLowerCase().includes("drone");
 
     const mock: MachineData = isDrone
       ? {
@@ -97,12 +81,15 @@ export default function App() {
     }, 1500);
   }, []);
 
+  // View switch
   const renderView = () => {
     switch (activeView) {
       case "chat":
         return <ChatInterface backendUrl="https://backend1-4-kx23.onrender.com" />;
+
       case "models":
         return <MachineGallery onSelectExample={generateMachine} />;
+
       case "3d-view":
         return machineData ? (
           <MachineCanvas machineType={machineData.type} isLoading={isGenerating} />
@@ -112,25 +99,20 @@ export default function App() {
             Generate a machine first
           </div>
         );
+
       case "settings":
         return <SettingSection />;
+
       default:
-        return <DualPanelView isGenerating={isGenerating} onGenerate={generateMachine} machineData={machineData} />;
+        return (
+          <DualPanelView
+            isGenerating={isGenerating}
+            onGenerate={generateMachine}
+            machineData={machineData}
+          />
+        );
     }
   };
-
-  if (!isAuthenticated) {
-    return (
-      <AIEnvironmentProvider>
-        <div className="min-h-screen bg-background relative overflow-hidden">
-          <CyberpunkBackground />
-          <AnimatePresence>{isBooting && <BootScreen />}</AnimatePresence>
-          <AuthModal isOpen={showAuthModal} onClose={() => {}} onLogin={handleLogin} />
-        </div>
-        <Toaster position="bottom-right" />
-      </AIEnvironmentProvider>
-    );
-  }
 
   return (
     <AIEnvironmentProvider>
@@ -142,11 +124,7 @@ export default function App() {
           activeView={activeView}
           onViewChange={setActiveView}
           onSearch={generateMachine}
-          onLogout={() => {
-            localStorage.removeItem("virtualFactoryAuth");
-            setIsAuthenticated(false);
-            setShowAuthModal(true);
-          }}
+          onLogout={() => {}}
           ollamaConnected={true}
           modelName="Perplexity"
         >
@@ -158,4 +136,3 @@ export default function App() {
     </AIEnvironmentProvider>
   );
 }
-
